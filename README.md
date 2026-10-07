@@ -73,5 +73,3 @@ If you put NexFlow behind HTTPS, also set `USE_HTTPS=true`.
 | `!! Cannot write to the uploads folder` | The account running the server needs write permission on the share in `UPLOAD_DIR`. |
 | `EADDRINUSE ... 4000` | Something else uses port 4000. Change `PORT` in `server/.env` and `SERVER` in `client/vite.config.js`. |
 | Logged out right after logging in (on the network) | Make sure `USE_HTTPS` is `false` unless you really use `https://`. |
-
-See [CLAUDE.md](CLAUDE.md) for how the code is organized.
