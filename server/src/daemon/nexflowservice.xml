@@ -1,0 +1,31 @@
+<service>
+	<id>nexflowservice.exe</id>
+	<name>NexFlowService</name>
+	<description>NexFlow Express server as a Windows service</description>
+	<executable>C:\nvm4w\nodejs\node.exe</executable>
+	<argument>--harmony</argument>
+	<argument>C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js</argument>
+	<argument>--file</argument>
+	<argument>C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js</argument>
+	<argument>--scriptoptions=</argument>
+	<argument>--log</argument>
+	<argument>NexFlowService wrapper</argument>
+	<argument>--grow</argument>
+	<argument>0.25</argument>
+	<argument>--wait</argument>
+	<argument>1</argument>
+	<argument>--maxrestarts</argument>
+	<argument>3</argument>
+	<argument>--abortonerror</argument>
+	<argument>n</argument>
+	<argument>--stopparentfirst</argument>
+	<argument>undefined</argument>
+	<logmode>rotate</logmode>
+	<stoptimeout>30sec</stoptimeout>
+	<serviceaccount>
+		<domain>DESKTOP-42MV8LH</domain>
+		<user>LocalSystem</user>
+		<password></password>
+	</serviceaccount>
+	<workingdirectory>C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server</workingdirectory>
+</service>

@@ -1,0 +1,114 @@
+2026-10-02 21:07:59 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-02 21:08:00 - Started 2364
+2026-10-02 21:08:26 - Stopping nexflowservice.exe
+2026-10-02 21:08:26 - ProcessKill 2364
+2026-10-02 21:08:26 - Found child process: 18788 Name: conhost.exe
+2026-10-02 21:08:26 - Found child process: 21644 Name: node.exe
+2026-10-02 21:08:26 - Stopping process 18788
+2026-10-02 21:08:26 - Send SIGINT 18788
+2026-10-02 21:08:26 - SIGINT to 18788 failed - Killing as fallback
+2026-10-02 21:08:26 - Stopping process 21644
+2026-10-02 21:08:26 - Send SIGINT 21644
+2026-10-02 21:08:26 - SIGINT to 21644 failed - Killing as fallback
+2026-10-02 21:08:26 - Stopping process 2364
+2026-10-02 21:08:26 - Send SIGINT 2364
+2026-10-02 21:08:26 - SIGINT to 2364 failed - Killing as fallback
+2026-10-02 21:08:26 - Finished nexflowservice.exe
+2026-10-02 21:08:27 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-02 21:08:27 - Started 2196
+2026-10-02 21:24:10 - Stopping nexflowservice.exe
+2026-10-02 21:24:10 - ProcessKill 2196
+2026-10-02 21:24:10 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2026-10-03 07:41:05 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-03 07:41:05 - Started 7396
+2026-10-03 07:50:37 - Stopping nexflowservice.exe
+2026-10-03 07:50:37 - ProcessKill 7396
+2026-10-03 07:50:38 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2026-10-03 07:51:08 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-03 07:51:08 - Started 7420
+2026-10-03 21:28:10 - Stopping nexflowservice.exe
+2026-10-03 21:28:10 - ProcessKill 7420
+2026-10-03 21:28:10 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2026-10-04 08:12:07 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-04 08:12:07 - Started 7564
+2026-10-04 22:45:15 - Stopping nexflowservice.exe
+2026-10-04 22:45:15 - ProcessKill 7564
+2026-10-04 22:45:15 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2026-10-05 07:21:29 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-05 07:21:29 - Started 7432
+2026-10-05 21:24:09 - Stopping nexflowservice.exe
+2026-10-05 21:24:09 - ProcessKill 7432
+2026-10-05 21:24:10 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2026-10-06 18:04:17 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-06 18:04:17 - Started 7436
+2026-10-06 21:23:28 - Stopping nexflowservice.exe
+2026-10-06 21:23:28 - ProcessKill 7436
+2026-10-06 21:23:28 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2026-10-07 17:48:55 - Starting C:\nvm4w\nodejs\node.exe  --harmony "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\node_modules\node-windows\lib\wrapper.js" --file "C:\Users\PC\Downloads\For Coding\NexFlow Web App - Futuristic glass UI\server\src\index.js" --scriptoptions= --log "NexFlowService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2026-10-07 17:48:55 - Started 7364
