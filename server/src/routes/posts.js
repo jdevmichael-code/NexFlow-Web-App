@@ -9,6 +9,8 @@ import { io } from '../socket.js'
 import { canView, isMember } from '../utils/access.js'
 import { logActivity } from '../utils/activity.js'
 import { httpError, validate } from '../utils/http.js'
+import { attachItems, getShareableItem, previewText } from '../utils/items.js'
+import { notifyMembers } from '../utils/notify.js'
 import { getPlace } from '../utils/places.js'
 import { reactionSchema, toggleReaction } from '../utils/reactions.js'
 import { attachUser, attachUsers } from '../utils/users.js'
@@ -24,6 +26,7 @@ const feedSchema = z.object({
 
 const postSchema = z.object({
   text: z.string().trim().max(5000, 'Post is too long (max 5000 characters)').optional().default(''),
+  itemId: z.string().trim().max(100).optional().default(''), // share one of your inventory items
 })
 
 const commentSchema = z.object({
@@ -55,16 +58,17 @@ router.get('/', async (req, res) => {
   })
   const hasMore = posts.length > PAGE_SIZE
 
-  res.json({ posts: await attachUsers(posts.slice(0, PAGE_SIZE), 'authorId', 'author'), hasMore })
+  res.json({ posts: await attachItems(await attachUsers(posts.slice(0, PAGE_SIZE), 'authorId', 'author')), hasMore })
 })
 
 router.post('/', imageUpload('posts'), async (req, res) => {
   const channel = await getPlace('channel', req.params.channelId)
   if (!isMember(req.user, channel)) throw httpError(403, 'Join this channel to post')
 
-  const { text } = validate(postSchema, req.body)
+  const { text, itemId } = validate(postSchema, req.body)
   const image = imageInfo(req.file, 'posts')
-  if (!text && !image) throw httpError(400, 'Write something or choose an image')
+  const item = itemId ? await getShareableItem(req.user, itemId) : null
+  if (!text && !image && !item) throw httpError(400, 'Write something or choose an image')
 
   const post = await saveDoc({
     _id: newId(),
@@ -73,16 +77,18 @@ router.post('/', imageUpload('posts'), async (req, res) => {
     authorId: req.user._id,
     text,
     image,
+    itemId: item?._id || null,
     reactions: {},
     commentCount: 0,
     createdAt: now(),
   })
 
-  const withAuthor = await attachUser(post, 'authorId', 'author')
-  io.to(`channel:${channel._id}`).emit('post:new', withAuthor)
+  const [full] = await attachItems([await attachUser(post, 'authorId', 'author')])
+  io.to(`channel:${channel._id}`).emit('post:new', full)
+  notifyMembers(channel, req.user, previewText(full))
   await logActivity(req.user._id, 'posted', `Posted in "${channel.name}"`, `/channels/${channel._id}`)
 
-  res.status(201).json(withAuthor)
+  res.status(201).json(full)
 })
 
 router.post('/:postId/react', async (req, res) => {

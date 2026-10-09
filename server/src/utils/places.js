@@ -18,6 +18,22 @@ const CONTENT = {
   ],
 }
 
+/**
+ * Default name of a private chat between two users, in the server's local time:
+ * "PM from Ann to Bob 2026-10-07 9:25". Uses the first word of each display name.
+ */
+export function directRoomName(from, to, date = new Date()) {
+  const pad = (n) => String(n).padStart(2, '0')
+  const firstName = (user) => user.displayName.trim().split(/\s+/)[0] || user.username
+  const when = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${date.getHours()}:${pad(date.getMinutes())}`
+  const build = (a, b) => `PM from ${a} to ${b} ${when}`
+
+  let names = [firstName(from), firstName(to)]
+  // Room names are at most 50 characters: shorten long names to fit
+  if (build(...names).length > 50) names = names.map((name) => (name.length > 10 ? name.slice(0, 9) + '…' : name))
+  return build(...names)
+}
+
 /** Load a room or channel, or throw 404. */
 export async function getPlace(type, id) {
   const place = await getDoc(id)
@@ -59,6 +75,15 @@ export async function placesOfMember(userId, type) {
     include_docs: true,
   })
   return result.rows.map((row) => row.doc).filter(Boolean)
+}
+
+/**
+ * The private chat ("Send message") between these two users, or null. Either of them may have started it.
+ * Only counts while it is still just the two of them: if one left or someone else was added, it's not a match.
+ */
+export async function findDirectRoom(userId, otherId) {
+  const rooms = await placesOfMember(userId, 'room')
+  return rooms.find((room) => room.isDirect && room.members.length === 2 && room.members.includes(otherId)) || null
 }
 
 /**

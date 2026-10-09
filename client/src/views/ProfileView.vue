@@ -86,8 +86,8 @@ async function changePassword() {
 
     <section class="card mb-6 flex flex-col items-center gap-4 p-6 sm:flex-row">
       <Avatar :user="auth.user" size="xl" />
-      <div class="flex-1 text-center sm:text-left">
-        <p class="text-xl font-semibold text-fg">{{ auth.user.displayName }}</p>
+      <div class="min-w-0 flex-1 text-center sm:text-left">
+        <p class="text-xl font-semibold wrap-break-word text-fg">{{ auth.user.displayName }}</p>
         <p class="text-sm text-muted">
           @{{ auth.user.username }} · Joined {{ formatDate(auth.user.createdAt) }}
           <span v-if="auth.isAdmin" class="badge ml-1 badge-amber">Admin</span>
@@ -99,8 +99,8 @@ async function changePassword() {
       </div>
     </section>
 
-    <div class="grid gap-6 md:grid-cols-2">
-      <form class="card flex flex-col gap-4 p-6" @submit.prevent="saveProfile">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <form class="card flex flex-col gap-4 p-5 sm:p-6" @submit.prevent="saveProfile">
         <h2 class="font-semibold text-fg">Profile settings</h2>
         <div>
           <label class="label" for="displayName">Display name</label>
@@ -116,7 +116,7 @@ async function changePassword() {
         </button>
       </form>
 
-      <form class="card flex flex-col gap-4 p-6" @submit.prevent="changePassword">
+      <form class="card flex flex-col gap-4 p-5 sm:p-6" @submit.prevent="changePassword">
         <h2 class="font-semibold text-fg">Change password</h2>
         <input type="text" :value="auth.user.username" autocomplete="username" class="hidden" readonly aria-hidden="true" />
         <div>

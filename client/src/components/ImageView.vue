@@ -4,7 +4,7 @@
 // with a "Show" button, so they only download when the user wants them.
 // Clicking a shown image opens it full size.
 import { ref } from 'vue'
-import Modal from './Modal.vue'
+import PictureViewer from './PictureViewer.vue'
 import { fileUrl, formatSize } from '@/utils/format'
 
 const props = defineProps({
@@ -38,8 +38,6 @@ const fullSize = ref(false)
       />
     </button>
 
-    <Modal v-model:open="fullSize" :title="props.image.name" size="full">
-      <img :src="fileUrl(props.image.path)" :alt="props.image.name" class="mx-auto max-h-[80vh] max-w-full object-contain" />
-    </Modal>
+    <PictureViewer v-model:open="fullSize" :src="fileUrl(props.image.path)" :title="props.image.name" />
   </div>
 </template>

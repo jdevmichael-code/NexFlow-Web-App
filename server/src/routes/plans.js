@@ -4,6 +4,7 @@ import { Router } from 'express'
 import { z } from 'zod'
 import { db, findAllDocs, getDoc, newId, now, saveDoc, sortBy, updateDoc } from '../db.js'
 import { requireAuth } from '../middleware/auth.js'
+import { io } from '../socket.js'
 import { logActivity } from '../utils/activity.js'
 import { httpError, validate } from '../utils/http.js'
 
@@ -24,6 +25,9 @@ const planSchema = z.object({
 })
 
 const rangeSchema = z.object({ from: dateString, to: dateString })
+
+// Tell all of the user's open tabs, so their reminders are rescheduled (see usePlanReminders on the client)
+const announceChange = (req) => io.to(req.user._id).emit('plans:changed')
 
 /** Load one of the current user's plans, or throw 404. */
 async function getOwnPlan(req) {
@@ -48,6 +52,7 @@ router.post('/', async (req, res) => {
   const data = validate(planSchema, req.body)
   const plan = await saveDoc({ _id: newId(), type: 'plan', userId: req.user._id, ...data, createdAt: now() })
   await logActivity(req.user._id, 'created_plan', `Planned "${plan.title}" on ${plan.date}`, '/planner')
+  announceChange(req)
   res.status(201).json(plan)
 })
 
@@ -55,12 +60,14 @@ router.put('/:id', async (req, res) => {
   const plan = await getOwnPlan(req)
   const data = validate(planSchema, req.body)
   const saved = await updateDoc(plan._id, (doc) => Object.assign(doc, data))
+  announceChange(req)
   res.json(saved)
 })
 
 router.delete('/:id', async (req, res) => {
   const plan = await getOwnPlan(req)
   await db.destroy(plan._id, plan._rev)
+  announceChange(req)
   res.json({ ok: true })
 })
 

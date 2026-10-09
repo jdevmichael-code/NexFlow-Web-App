@@ -7,6 +7,7 @@ import { useToast } from '@/composables/useToast'
 import Avatar from './Avatar.vue'
 import ImageView from './ImageView.vue'
 import ReactionBar from './ReactionBar.vue'
+import SharedItem from './SharedItem.vue'
 import { timeAgo } from '@/utils/format'
 
 const props = defineProps({
@@ -16,7 +17,8 @@ const props = defineProps({
   submitComment: { type: Function, required: true }, // async (text) => {}
 })
 
-const emit = defineEmits(['react', 'toggle-comments'])
+// open-user (user, element): an avatar was clicked; the page opens its UserMenu next to `element`
+const emit = defineEmits(['react', 'toggle-comments', 'open-user'])
 const toast = useToast()
 const commentText = ref('')
 const sending = ref(false)
@@ -39,7 +41,17 @@ async function sendComment() {
 <template>
   <article class="card p-4">
     <header class="flex items-center gap-3">
-      <Avatar :user="props.post.author" />
+      <!-- Click an avatar: View user profile / Send message (deleted users have no menu) -->
+      <button
+        v-if="props.post.author._id"
+        type="button"
+        class="shrink-0 cursor-pointer rounded-full transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        :aria-label="`${props.post.author.displayName}: profile and message options`"
+        @click="emit('open-user', props.post.author, $event.currentTarget)"
+      >
+        <Avatar :user="props.post.author" />
+      </button>
+      <Avatar v-else :user="props.post.author" />
       <div class="min-w-0">
         <p class="truncate font-medium text-fg">{{ props.post.author.displayName }}</p>
         <p class="text-xs text-muted">{{ timeAgo(props.post.createdAt) }}</p>
@@ -48,6 +60,7 @@ async function sendComment() {
 
     <p v-if="props.post.text" class="mt-3 wrap-break-word whitespace-pre-wrap text-fg">{{ props.post.text }}</p>
     <ImageView v-if="props.post.image" :image="props.post.image" class="mt-2" />
+    <SharedItem v-if="props.post.item" :item="props.post.item" class="mt-2" />
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2">
       <ReactionBar
@@ -66,9 +79,18 @@ async function sendComment() {
       <p v-else-if="props.post.comments.length === 0" class="text-sm text-muted">No comments yet.</p>
 
       <div v-for="comment in props.post.comments || []" :key="comment._id" class="flex gap-2">
-        <Avatar :user="comment.author" size="sm" />
+        <button
+          v-if="comment.author._id"
+          type="button"
+          class="shrink-0 cursor-pointer self-start rounded-full transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          :aria-label="`${comment.author.displayName}: profile and message options`"
+          @click="emit('open-user', comment.author, $event.currentTarget)"
+        >
+          <Avatar :user="comment.author" size="sm" />
+        </button>
+        <Avatar v-else :user="comment.author" size="sm" />
         <div class="min-w-0 rounded-xl bg-hover px-3 py-2">
-          <p class="text-xs">
+          <p class="text-xs wrap-break-word">
             <span class="font-semibold text-fg">{{ comment.author.displayName }}</span>
             <span class="text-muted"> · {{ timeAgo(comment.createdAt) }}</span>
           </p>
@@ -77,8 +99,8 @@ async function sendComment() {
       </div>
 
       <form v-if="props.canInteract" class="flex gap-2" @submit.prevent="sendComment">
-        <input v-model="commentText" class="input" placeholder="Write a comment…" maxlength="1000" aria-label="Comment" />
-        <button type="submit" class="btn btn-primary" :disabled="sending || !commentText.trim()">Reply</button>
+        <input v-model="commentText" class="input min-w-0" placeholder="Write a comment…" maxlength="1000" aria-label="Comment" />
+        <button type="submit" class="btn btn-primary shrink-0" :disabled="sending || !commentText.trim()">Reply</button>
       </form>
     </section>
   </article>

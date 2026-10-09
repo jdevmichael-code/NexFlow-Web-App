@@ -12,8 +12,17 @@ import { canView } from './utils/access.js'
 //   'room:<id>'      everyone looking at a chat room
 //   'channel:<id>'   everyone looking at a channel
 //   '<user id>'      all open tabs of one user (for personal events)
+//
+// Presence: a user is "online" while they have at least one open socket.
+// Everyone gets 'presence:changed' { userId, online } when that flips.
 
 export let io
+
+// userId → number of open sockets (tabs). Kept in memory, so this assumes one server process.
+const openSockets = new Map()
+
+export const isOnline = (userId) => openSockets.has(userId)
+export const onlineUserIds = () => [...openSockets.keys()]
 
 export function setupSocket(httpServer) {
   io = new Server(httpServer, {
@@ -32,7 +41,19 @@ export function setupSocket(httpServer) {
   })
 
   io.on('connection', (socket) => {
-    socket.join(socket.data.userId)
+    const { userId } = socket.data
+    socket.join(userId)
+
+    const count = (openSockets.get(userId) || 0) + 1
+    openSockets.set(userId, count)
+    if (count === 1) io.emit('presence:changed', { userId, online: true })
+
+    socket.on('disconnect', () => {
+      const left = (openSockets.get(userId) || 1) - 1
+      if (left > 0) return openSockets.set(userId, left)
+      openSockets.delete(userId)
+      io.emit('presence:changed', { userId, online: false })
+    })
 
     for (const type of ['room', 'channel']) {
       socket.on(`${type}:join`, async (placeId, reply) => {

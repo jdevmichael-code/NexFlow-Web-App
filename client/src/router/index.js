@@ -30,6 +30,7 @@ const routes = [
     props: { type: 'channel' },
     meta: { admin: true },
   },
+  { path: '/admin/private', component: () => import('@/views/admin/AdminPrivateView.vue'), meta: { admin: true } },
 
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]

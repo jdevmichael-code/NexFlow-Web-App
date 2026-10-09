@@ -10,8 +10,17 @@ import { io } from '../socket.js'
 import { canJoin, canManage, canView, isAdmin, isMember, isOwner } from '../utils/access.js'
 import { logActivity } from '../utils/activity.js'
 import { httpError, validate } from '../utils/http.js'
-import { deletePlaceContent, getPlace, placeDetails, placeLabel, placesOfMember, placeSummary } from '../utils/places.js'
-import { attachUsers } from '../utils/users.js'
+import {
+  deletePlaceContent,
+  directRoomName,
+  findDirectRoom,
+  getPlace,
+  placeDetails,
+  placeLabel,
+  placesOfMember,
+  placeSummary,
+} from '../utils/places.js'
+import { attachUsers, shortUser } from '../utils/users.js'
 
 const placeSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(50),
@@ -66,6 +75,38 @@ export function placeRouter(type) {
     await logActivity(req.user._id, `created_${type}`, `Created ${type} "${place.name}"`, pageLink(place._id))
     res.status(201).json(await placeDetails(place, req.user))
   })
+
+  // "Send message": the private room with just you and one other user (rooms only).
+  // There is one per pair of users: if it already exists, you get that one instead of a new room.
+  if (type === 'room') {
+    router.post('/direct', async (req, res) => {
+      const { userId } = validate(addMemberSchema, req.body)
+      if (userId === req.user._id) throw httpError(400, 'You cannot send a private message to yourself')
+
+      const other = await getDoc(userId)
+      if (!other || other.type !== 'user' || other.status !== 'active') throw httpError(404, 'User not found')
+
+      const existing = await findDirectRoom(req.user._id, other._id)
+      if (existing) return res.json({ ...(await placeDetails(existing, req.user)), existing: true })
+
+      const place = await saveDoc({
+        _id: newId(),
+        type,
+        name: directRoomName(req.user, other),
+        description: `Private chat between ${req.user.displayName} and ${other.displayName}`,
+        isPublic: false,
+        isDirect: true,
+        ownerId: req.user._id,
+        members: [req.user._id, other._id],
+        createdAt: now(),
+      })
+
+      await logActivity(req.user._id, 'created_room', `Started a private chat with ${other.displayName}`, pageLink(place._id))
+      // Let the other user know, in any tab they have open
+      io.to(other._id).emit('room:direct', { id: place._id, name: place.name, from: shortUser(req.user) })
+      res.status(201).json(await placeDetails(place, req.user))
+    })
+  }
 
   router.get('/:id', async (req, res) => {
     const place = await getPlace(type, req.params.id)

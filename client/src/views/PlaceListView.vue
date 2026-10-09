@@ -71,7 +71,7 @@ async function join(place) {
         <p class="text-sm text-muted">{{ text.intro }}</p>
       </div>
       <div class="flex w-full gap-2 sm:w-auto">
-        <input v-model="search" class="input sm:w-56" placeholder="Search…" aria-label="Search" />
+        <input v-model="search" class="input min-w-0 sm:w-56" placeholder="Search…" aria-label="Search" />
         <button type="button" class="btn btn-primary" @click="showCreate = true">+ {{ text.create }}</button>
       </div>
     </header>
@@ -84,7 +84,7 @@ async function join(place) {
         <p v-if="mine.length === 0" class="card p-6 text-center text-sm text-muted">
           You haven't joined any {{ props.type }}s yet. Create one or join one below.
         </p>
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <RouterLink
             v-for="place in mine"
             :key="place._id"
@@ -108,18 +108,18 @@ async function join(place) {
           {{ auth.isAdmin ? 'All others (admin view)' : 'Discover' }}
         </h2>
         <p v-if="others.length === 0" class="text-sm text-muted">Nothing new to join right now.</p>
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <div v-for="place in others" :key="place._id" class="card flex flex-col p-4">
             <div class="flex items-center justify-between gap-2">
               <h3 class="truncate font-semibold text-fg">{{ place.name }}</h3>
               <span v-if="!place.isPublic" class="badge badge-gray">🔒 Private</span>
             </div>
             <p class="mt-1 line-clamp-2 min-h-10 flex-1 text-sm text-muted">{{ place.description || 'No description' }}</p>
-            <div class="mt-3 flex items-center justify-between">
-              <span class="flex items-center gap-1 text-xs text-subtle">
+            <div class="mt-3 flex items-center justify-between gap-2">
+              <span class="flex min-w-0 items-center gap-1 text-xs wrap-break-word text-subtle">
                 <Icon name="users" /> {{ place.memberCount }} · by {{ place.owner.displayName }}
               </span>
-              <div class="flex gap-1">
+              <div class="flex shrink-0 gap-1">
                 <RouterLink v-if="auth.isAdmin" :to="`/${props.type}s/${place._id}`" class="btn btn-secondary btn-sm">View</RouterLink>
                 <button type="button" class="btn btn-primary btn-sm" @click="join(place)">Join</button>
               </div>

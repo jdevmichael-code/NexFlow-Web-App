@@ -140,6 +140,28 @@
 /* Headings use a techy font; body text stays the system font for easy reading */
 @theme {
   --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Toasts slide in, and messages/reminders glow twice so they get noticed.
+     Always used with motion-safe: so "reduce motion" turns them off. */
+  --animate-toast-in: toast-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+  --animate-toast-in-attention:
+    toast-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.15),
+    attention 1.4s ease-out 0.35s 2;
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateX(2rem) scale(0.96);
+    }
+  }
+  @keyframes attention {
+    0% {
+      box-shadow: 0 0 0 0 rgb(34 211 238 / 0.55);
+    }
+    100% {
+      box-shadow: 0 0 0 14px rgb(34 211 238 / 0);
+    }
+  }
 }
 
 /* ============================================================

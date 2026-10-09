@@ -125,9 +125,10 @@ async function deleteUser(user) {
       Showing the first {{ total }} matches. Type more letters to narrow the search.
     </p>
 
-    <div class="card overflow-x-auto">
-      <table class="w-full min-w-4xl text-left text-sm">
-        <thead class="border-b border-line bg-hover text-xs text-muted uppercase">
+    <!-- A table on large screens. Smaller screens: each row becomes a stacked card, so nothing scrolls sideways. -->
+    <div class="card overflow-hidden lg:overflow-x-auto">
+      <table class="block w-full text-left text-sm lg:table lg:min-w-4xl">
+        <thead class="hidden border-b border-line bg-hover text-xs text-muted uppercase lg:table-header-group">
           <tr>
             <th class="px-4 py-3 font-semibold">User</th>
             <th class="px-4 py-3 font-semibold">Role</th>
@@ -137,9 +138,9 @@ async function deleteUser(user) {
             <th class="px-4 py-3 text-right font-semibold">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-line" :class="loading ? 'opacity-50' : ''">
-          <tr v-for="user in users" :key="user._id">
-            <td class="px-4 py-3">
+        <tbody class="block divide-y divide-line lg:table-row-group" :class="loading ? 'opacity-50' : ''">
+          <tr v-for="user in users" :key="user._id" class="flex flex-wrap items-center gap-x-3 gap-y-2 p-4 lg:table-row lg:p-0">
+            <td class="w-full lg:w-auto lg:px-4 lg:py-3">
               <div class="flex items-center gap-3">
                 <Avatar :user="user" size="sm" />
                 <div class="min-w-0">
@@ -151,18 +152,22 @@ async function deleteUser(user) {
                 </div>
               </div>
             </td>
-            <td class="px-4 py-3">
+            <td class="lg:px-4 lg:py-3">
               <span v-if="user.role === 'admin'" class="badge badge-amber">Admin</span>
               <span v-else class="badge badge-gray">User</span>
             </td>
-            <td class="px-4 py-3">
+            <td class="lg:px-4 lg:py-3">
               <span v-if="user.status === 'active'" class="badge badge-green">Active</span>
               <span v-else class="badge badge-red">Disabled</span>
             </td>
-            <td class="px-4 py-3 text-muted">{{ user.lastLoginAt ? timeAgo(user.lastLoginAt) : 'Never' }}</td>
-            <td class="px-4 py-3 text-muted">{{ formatDate(user.createdAt) }}</td>
-            <td class="px-4 py-3">
-              <div v-if="user._id !== auth.user._id" class="flex justify-end gap-1">
+            <td class="text-xs text-muted lg:px-4 lg:py-3 lg:text-sm">
+              <span class="lg:hidden">Last login </span>{{ user.lastLoginAt ? timeAgo(user.lastLoginAt) : 'Never' }}
+            </td>
+            <td class="text-xs text-muted lg:px-4 lg:py-3 lg:text-sm">
+              <span class="lg:hidden">Joined </span>{{ formatDate(user.createdAt) }}
+            </td>
+            <td class="w-full empty:hidden lg:w-auto lg:px-4 lg:py-3 lg:empty:table-cell">
+              <div v-if="user._id !== auth.user._id" class="-ml-2.5 flex flex-wrap gap-1 lg:ml-0 lg:flex-nowrap lg:justify-end">
                 <button v-if="user.role === 'user'" type="button" class="btn btn-ghost btn-sm" @click="setRole(user, 'admin')">
                   Make admin
                 </button>
@@ -180,8 +185,8 @@ async function deleteUser(user) {
               </div>
             </td>
           </tr>
-          <tr v-if="!loading && users.length === 0">
-            <td colspan="6" class="px-4 py-8 text-center text-muted">No users found.</td>
+          <tr v-if="!loading && users.length === 0" class="block lg:table-row">
+            <td colspan="6" class="block px-4 py-8 text-center text-muted lg:table-cell">No users found.</td>
           </tr>
         </tbody>
       </table>
@@ -200,7 +205,7 @@ async function deleteUser(user) {
           their profile after logging in.
         </p>
         <div class="mt-3 flex gap-2">
-          <code class="flex-1 rounded-lg bg-hover px-3 py-2 font-mono text-base select-all">{{ tempPassword.password }}</code>
+          <code class="min-w-0 flex-1 rounded-lg bg-hover px-3 py-2 font-mono text-base break-all select-all">{{ tempPassword.password }}</code>
           <button type="button" class="btn btn-secondary" @click="copyPassword">Copy</button>
         </div>
       </template>

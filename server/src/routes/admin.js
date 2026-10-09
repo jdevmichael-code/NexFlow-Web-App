@@ -1,17 +1,19 @@
-// Admin-only: the users management table.
+// Admin-only: the users management table, a user's activity, and the list of private rooms/channels.
 // (Admins manage rooms and channels through the normal /api/rooms and /api/channels routes,
 //  which already allow admins to view, clear and delete anything.)
 
 import { Router } from 'express'
 import { randomBytes, randomInt } from 'node:crypto'
 import { z } from 'zod'
-import { deleteMatching, getDoc, queryView, sortBy, updateDoc } from '../db.js'
+import { deleteMatching, findAllDocs, getDoc, getDocs, queryView, sortBy, updateDoc } from '../db.js'
 import { requireAdmin, requireAuth } from '../middleware/auth.js'
 import { removeImage } from '../middleware/upload.js'
 import { kickUser } from '../socket.js'
+import { activityCounts, recentActivity } from '../utils/activity.js'
 import { httpError, validate } from '../utils/http.js'
 import { hashPassword } from '../utils/passwords.js'
-import { publicUser, searchUsers } from '../utils/users.js'
+import { placeSummary } from '../utils/places.js'
+import { attachUsers, publicUser, searchUsers, shortUser } from '../utils/users.js'
 
 const router = Router()
 router.use(requireAuth, requireAdmin)
@@ -66,6 +68,37 @@ router.get('/users', async (req, res) => {
     page,
     pageSize: PAGE_SIZE,
   })
+})
+
+// A user's activity: counts and their newest 20 actions (shown in "View user profile")
+router.get('/users/:id/activity', async (req, res) => {
+  const user = await getDoc(req.params.id)
+  if (!user || user.type !== 'user') throw httpError(404, 'User not found')
+
+  const [counts, recent] = await Promise.all([activityCounts(user._id), recentActivity(user._id, 20)])
+  res.json({ counts, recent })
+})
+
+// Every private room and channel (including private chats), newest first, with their members
+router.get('/private-places', async (req, res) => {
+  const sort = sortBy(['type', 'isPublic', 'createdAt'], 'desc')
+  const [rooms, channels] = await Promise.all([
+    findAllDocs({ type: 'room', isPublic: false }, { sort }),
+    findAllDocs({ type: 'channel', isPublic: false }, { sort }),
+  ])
+  const places = [...rooms, ...channels].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+
+  // Fetch every member once, however many places they are in
+  const members = await getDocs([...new Set(places.flatMap((place) => place.members))])
+  const membersById = new Map(members.filter((user) => user.status !== 'deleted').map((user) => [user._id, shortUser(user)]))
+
+  const withOwners = await attachUsers(places, 'ownerId', 'owner')
+  res.json(
+    withOwners.map((place) => ({
+      ...placeSummary(place, req.user),
+      members: place.members.map((id) => membersById.get(id)).filter(Boolean),
+    })),
+  )
 })
 
 // Change role and/or status
